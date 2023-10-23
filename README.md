@@ -52,15 +52,10 @@ touch .env
 ```
 Заполните его по примеру:
 ```
-APP_TITLE = Благотворительный фонд поддержки котиков
 DATABASE_URL = sqlite+aiosqlite:///./fastapi.db
 SECRET = sochetaniesimvolov
 ```
-Создайте базу данных и выполните миграци:
-```
-alembic init --template async alembic
-alembic upgrade head 
-```
+
 Запуск проекта:
 ```
 uvicorn app.main:app --reload
