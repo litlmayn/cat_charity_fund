@@ -9,7 +9,7 @@ from app.api.validators import (
 from app.core.db import get_async_session
 from app.core.user import current_superuser
 from app.crud.charity_project import charity_project_crud
-from app.models import Donation
+from app.models.donation import Donation
 from app.schemas.charity_project import (
     CharityProjectDB, CharityProjectCreate, CharityProjectUpdate
 )
