@@ -7,7 +7,7 @@ from sqlalchemy import (
 from app.core.db import Base
 
 
-class AbstractModel(Base):
+class IvestmentModel(Base):
     __abstract__ = True
     __table_args__ = (
         CheckConstraint("full_amount>0", "full_amount>invested_amount"),

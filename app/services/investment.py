@@ -1,31 +1,17 @@
 from datetime import datetime
 
-from sqlalchemy.ext.asyncio import AsyncSession
 
-
-def close_charity_prorject(db_obj):
-    db_obj.fully_invested = True
-    db_obj.close_date = datetime.utcnow()
-
-
-async def investment_process(
+def investment_process(
     target,
     sources,
-    session: AsyncSession,
 ):
-    while sources and target.full_amount > target.invested_amount:
-        source = sources.pop()
-        needed_money = source.full_amount - source.invested_amount
-        if target.full_amount > needed_money:
-            target.invested_amount += needed_money
-        else:
-            target.invested_amount = target.full_amount
-            close_charity_prorject(target)
-            source.invested_amount += target.full_amount
-            if source.invested_amount == source.full_amount:
-                close_charity_prorject(source)
-        session.add(source)
-    session.add(target)
-    await session.commit()
-    await session.refresh(target)
+    for source in sources:
+        needed_money = target.full_amount - target.invested_amount
+        if needed_money == 0:
+            break
+        for object in [source, target]:
+            object.invested_amount += needed_money
+            if object.invested_amount == object.full_amount:
+                object.fully_invested = True
+                object.close_date = datetime.utcnow()
     return target

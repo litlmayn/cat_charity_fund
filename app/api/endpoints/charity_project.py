@@ -45,8 +45,13 @@ async def create_charity_project(
     charity_project = await charity_project_crud.create(
         charity_project, session
     )
-    sources = await charity_project_crud.get_db_objs_for_investment(Donation, session)
-    charity_project = await investment_process(charity_project, sources, session)
+    sources = await charity_project_crud.get_sources(
+        Donation, session
+    )
+    charity_project = investment_process(charity_project, sources)
+    session.add(charity_project)
+    await session.commit()
+    await session.refresh(charity_project)
     return charity_project
 
 
@@ -60,7 +65,9 @@ async def delete_charity_project(
     session: AsyncSession = Depends(get_async_session)
 ):
     """Только для суперюзера."""
-    charity_project = await check_charity_project_exists(project_id, session)
+    charity_project = await check_charity_project_exists(
+        project_id, session
+    )
     check_charity_project_invested(charity_project)
     charity_project = await charity_project_crud.remove(
         charity_project, session
