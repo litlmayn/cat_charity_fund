@@ -56,10 +56,16 @@ DATABASE_URL = sqlite+aiosqlite:///./fastapi.db
 SECRET = sochetaniesimvolov
 ```
 
+Создайте базу данных и выполните миграции:
+```
+alembic init --template async alembic
+alembic revision --autogenerate -m "First migration"
+```
+
 Запуск проекта:
 ```
 uvicorn app.main:app --reload
 ```
 ### Документация:
 
-Документация находиться по ссылке '/docs'
+Документация находиться в файле [OpenAPI](https://github.com/litlmayn/cat_charity_fund/blob/master/openapi.json)
