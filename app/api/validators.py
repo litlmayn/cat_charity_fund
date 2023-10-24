@@ -31,7 +31,7 @@ async def check_charity_project_exists(
     return charity_project
 
 
-async def check_update_charity_project(
+def check_update_charity_project(
         charity_project: CharityProject,
         charity_project_update: CharityProjectUpdate
 ):
@@ -42,14 +42,15 @@ async def check_update_charity_project(
         )
 
     if (charity_project_update.full_amount and
-            charity_project.invested_amount > charity_project_update.full_amount):
+            charity_project.invested_amount >
+            charity_project_update.full_amount):
         raise HTTPException(
             status_code=400,
             detail='В проект были внесены средства, не подлежит удалению!'
         )
 
 
-async def check_charity_project_invested(charity_project: CharityProject):
+def check_charity_project_invested(charity_project: CharityProject):
     if charity_project.invested_amount > 0:
         raise HTTPException(
             status_code=400,

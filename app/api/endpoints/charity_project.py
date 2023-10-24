@@ -45,7 +45,8 @@ async def create_charity_project(
     charity_project = await charity_project_crud.create(
         charity_project, session
     )
-    charity_project = await investment_process(charity_project, Donation, session)
+    sources = await charity_project_crud.get_db_objs_for_investment(Donation, session)
+    charity_project = await investment_process(charity_project, sources, session)
     return charity_project
 
 
@@ -60,7 +61,7 @@ async def delete_charity_project(
 ):
     """Только для суперюзера."""
     charity_project = await check_charity_project_exists(project_id, session)
-    await check_charity_project_invested(charity_project)
+    check_charity_project_invested(charity_project)
     charity_project = await charity_project_crud.remove(
         charity_project, session
     )
@@ -80,7 +81,7 @@ async def update_charity_project(
     """Только для суперюзера."""
     await check_name_duplicate(obj_in.name, session)
     charity_project = await check_charity_project_exists(project_id, session)
-    await check_update_charity_project(charity_project, obj_in)
+    check_update_charity_project(charity_project, obj_in)
     charity_project = await charity_project_crud.update(
         charity_project, obj_in, session
     )

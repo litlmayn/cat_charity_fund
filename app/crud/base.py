@@ -36,7 +36,6 @@ class CRUDBase:
             obj_in,
             session: AsyncSession,
             user: Optional[User] = None,
-
     ):
         obj_in_data = obj_in.dict()
         if user is not None:
@@ -72,3 +71,15 @@ class CRUDBase:
         await session.delete(db_obj)
         await session.commit()
         return db_obj
+
+    async def get_db_objs_for_investment(
+            self,
+            model,
+            session: AsyncSession
+    ):
+        sources = await session.execute(
+            select(model)
+            .where(model.fully_invested == 0)
+            .order_by(model.id.desc())
+        )
+        return sources.scalars().all()

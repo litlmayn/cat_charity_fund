@@ -40,7 +40,8 @@ async def create_donation(
     user: User = Depends(current_user)
 ):
     new_donation = await donation_crud.create(donation, session)
-    new_donation = await investment_process(new_donation, CharityProject, session)
+    sources = await donation_crud.get_db_objs_for_investment(CharityProject, session)
+    new_donation = await investment_process(new_donation, sources, session)
     return new_donation
 
 
