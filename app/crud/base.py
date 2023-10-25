@@ -36,14 +36,14 @@ class CRUDBase:
             obj_in,
             session: AsyncSession,
             user: Optional[User] = None,
-            flag: bool = True,
+            make_commit: bool = True,
     ):
         obj_in_data = obj_in.dict()
         if user is not None:
             obj_in_data['user_id'] = user.id
         db_obj = self.model(**obj_in_data)
         session.add(db_obj)
-        if flag:
+        if make_commit:
             await session.commit()
             await session.refresh(db_obj)
         return db_obj
@@ -74,13 +74,12 @@ class CRUDBase:
         await session.commit()
         return db_obj
 
-    async def get_sources(
+    async def get_object_in_bd(
             self,
-            model,
             session: AsyncSession
     ):
         sources = await session.execute(
-            select(model)
-            .where(model.fully_invested == 0)
+            select(self.model)
+            .where(self.model.fully_invested == 0)
         )
         return sources.scalars().all()

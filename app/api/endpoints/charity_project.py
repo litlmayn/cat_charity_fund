@@ -9,7 +9,7 @@ from app.api.validators import (
 from app.core.db import get_async_session
 from app.core.user import current_superuser
 from app.crud.charity_project import charity_project_crud
-from app.models.donation import Donation
+from app.crud.donation import donation_crud
 from app.schemas.charity_project import (
     CharityProjectDB, CharityProjectCreate, CharityProjectUpdate
 )
@@ -45,11 +45,9 @@ async def create_charity_project(
     charity_project = await charity_project_crud.create(
         charity_project, session
     )
-    sources = await charity_project_crud.get_sources(
-        Donation, session
-    )
-    charity_project = investment_process(charity_project, sources)
-    session.add(charity_project)
+    sources = await donation_crud.get_object_in_bd(session)
+    charity_projects = investment_process(charity_project, sources)
+    [session.add(charity_project) for charity_project in charity_projects]
     await session.commit()
     await session.refresh(charity_project)
     return charity_project

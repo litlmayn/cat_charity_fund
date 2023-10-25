@@ -18,7 +18,7 @@ class CharityProjectUpdate(CharityProjectCreate):
         extra = Extra.forbid
 
 
-class CharityProjectDB(BaseAbstractSchema, CharityProjectCreate):
+class CharityProjectDB(BaseAbstractSchema, CharityProjectUpdate):
     id: int
 
     class Config:
