@@ -42,9 +42,9 @@ async def create_donation(
     new_donation = await donation_crud.create(
         donation, session
     )
-    sources = await charity_project_crud.get_object_in_bd(session)
-    new_donations = investment_process(new_donation, sources)
-    [session.add(new_donation) for new_donation in new_donations]
+    charity_project = await charity_project_crud.get_donations_or_projects(session)
+    charity_projects = investment_process(new_donation, charity_project)
+    session.add_all(charity_projects)
     await session.commit()
     await session.refresh(new_donation)
     return new_donation

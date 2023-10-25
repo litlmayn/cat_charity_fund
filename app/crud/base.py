@@ -74,7 +74,7 @@ class CRUDBase:
         await session.commit()
         return db_obj
 
-    async def get_object_in_bd(
+    async def get_donations_or_projects(
             self,
             session: AsyncSession
     ):
